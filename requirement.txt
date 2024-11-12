@@ -1,0 +1,6 @@
+flask
+flask-socketio
+jinja2
+eventlet
+eventlet==0.30.0
+gevent

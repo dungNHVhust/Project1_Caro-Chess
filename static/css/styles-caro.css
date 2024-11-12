@@ -1,0 +1,73 @@
+body {
+    background-image: url('../images/bgr.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+#board {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(20, 0fr);
+    gap: 0px;
+}
+
+.cell {
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    transition: transform 0.2s;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.cell:active {
+    transform: scale(0.9);
+}
+
+.cell.x {
+    color: #FF073A;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    text-shadow: 0 0 5px #FF073A, 0 0 10px #FF073A, 0 0 20px #FF073A,
+                 0 0 40px #FF073A, 0 0 80px #FF073A;
+}
+
+.cell.o {
+    color: #0DFFF7;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    text-shadow: 0 0 5px #0DFFF7, 0 0 10px #0DFFF7, 0 0 20px #0DFFF7,
+                 0 0 40px #0DFFF7, 0 0 80px #0DFFF7;
+}
+
+
+@keyframes blink {
+    0% {
+        background-color: #ffff99;
+    }
+    50% {
+        background-color: transparent;
+    }
+    100% {
+        background-color: #ffff99;
+    }
+}
+
+.cell.highlight {
+    animation: blink 0.3s linear;
+}
+
+
+
+
+
+
+
