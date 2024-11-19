@@ -11,6 +11,9 @@ def index():
 @app.route('/caro-off')
 def off():
     return render_template('caro-off.html')
+@app.route('/caro-comp')
+def comp():
+    return render_template('caro-comp.html')
 
 @socketio.on('move')
 def handle_move(data):
