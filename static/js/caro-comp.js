@@ -144,7 +144,8 @@ function evaluatePosition(row, col, player) {
             count++;
         }
 
-        maxScore = Math.max(maxScore, count);
+        // maxScore = Math.max(maxScore, count);
+        maxScore = Math.max(maxScore, MAP_SCORE_COMPUTER.get(count) || 0);
     }
 
     return maxScore;
@@ -185,8 +186,9 @@ function evaluateDefensePosition(row, col, player) {
 
             count++;
         }
-
-        maxScore = Math.max(maxScore, count);
+        
+        // maxScore = Math.max(maxScore, count);
+        maxScore = Math.max(maxScore, MAP_POINT_HUMAN.get(count) || 0);
     }
 
     return maxScore;
