@@ -11,10 +11,54 @@
         <div class="center">
             <div class="title">Game Caro - Project 1</div>
             <p class="intro">Chọn chế độ chơi.</p>
+            <button class="btn btn1" id="openPopup">Chơi Online</button>
             <button class="btn btn1" onclick="window.location.href='/caro-off'">Chơi Offline</button>
             <button class="btn btn1" onclick="window.location.href='/caro-comp'">Chơi với máy</button>
+
+            <div id="popup" class="hidden">
+                <div class="popup-content">
+                    <span id="closePopup" class="close">&times;</span>
+                    <h1>Chế độ chơi 2 người</h1>
+                    <button class="btn btn-createRoom" id="createRoom">Tạo Phòng</button>
+                    <button class="btn btn-createRoom" id="joinRoom">Vào Phòng</button>
+                    
+                </div>
+            </div>
         </div>
 
+        <div id="popup_CreateRoom" class="hidden">
+            <div class="popup_CreateRoom-content">
+                <span id="closePopup_CreateRoom" class="close">&times;</span>
+                <h1>Tạo Phòng</h1>
+                <p>ID phòng: <span id="roomID">...</span></p>
+                <h2>Password</h2>
+                <input type="password" placeholder="Nhập mật khẩu" id="password">
+                <button class="btn btn-createRoom_submit" onclick="createRoom()" >Tạo phòng</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Tạo ID ngẫu nhiên
+        function generateRoomID() {
+          return Math.floor(100000 + Math.random() * 900000); // 6 chữ số
+        }
+    
+        // Hiển thị ID phòng ngẫu nhiên khi tải trang
+        document.getElementById('roomID').textContent = generateRoomID();
+    
+        // Hàm xử lý khi bấm nút Tạo phòng
+        function createRoom() {
+          const roomID = document.getElementById('roomID').textContent;
+          const password = document.getElementById('password').value;
+          if(password){
+            alert(`Phòng được tạo thành công!\nID Phòng: ${roomID}\nPassword: ${password}`);
+          }
+          else {
+            alert('Nhập password !!!')
+          }
+          
+        }
+      </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
         <script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
         <script src="{{ url_for('static', filename = 'js/game.js') }}"></script>
