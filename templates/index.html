@@ -20,7 +20,7 @@
                     <span id="closePopup" class="close">&times;</span>
                     <h1>Chế độ chơi 2 người</h1>
                     <button class="btn btn-createRoom" id="createRoom">Tạo Phòng</button>
-                    <button class="btn btn-createRoom" id="joinRoom">Vào Phòng</button>
+                    <button class="btn btn-createRoom" id="joinRoom" type='submit'>Vào Phòng</button>
                     
                 </div>
             </div>
@@ -31,36 +31,30 @@
                 <span id="closePopup_CreateRoom" class="close">&times;</span>
                 <h1>Tạo Phòng</h1>
                 <p>ID phòng: <span id="roomID">...</span></p>
+                <h2>Username</h2>
+                <input type="Username" placeholder="Nhập Username" id="username">
                 <h2>Password</h2>
                 <input type="password" placeholder="Nhập mật khẩu" id="password">
-                <button class="btn btn-createRoom_submit" onclick="createRoom()" >Tạo phòng</button>
+                <button class="btn btn-createRoom_submit"  onclick="createRoom()" >Tạo phòng</button>
+            </div>
+        </div>
+        <div id="popup_JoinRoom" class="hidden">
+            <div class="popup_JoinRoom-content">
+                <span id="closePopup_JoinRoom" class="close">&times;</span>
+                <h1>Vào Phòng</h1>
+                <h2>ID phòng </h2>
+                <input placeholder="Nhập ID Phòng" id="room_ID">
+                <h2>Username</h2>
+                <input type="Username" placeholder="Nhập Username" id="joinRoom_username">
+                <h2>Password</h2>
+                <input type="password" placeholder="Nhập mật khẩu" id="joinRoom_password">
+                <button class="btn btn-joinRoom_submit"  onclick="joinRoom()" >Vào phòng</button>
             </div>
         </div>
     </div>
-    <script>
-        // Tạo ID ngẫu nhiên
-        function generateRoomID() {
-          return Math.floor(100000 + Math.random() * 900000); // 6 chữ số
-        }
     
-        // Hiển thị ID phòng ngẫu nhiên khi tải trang
-        document.getElementById('roomID').textContent = generateRoomID();
-    
-        // Hàm xử lý khi bấm nút Tạo phòng
-        function createRoom() {
-          const roomID = document.getElementById('roomID').textContent;
-          const password = document.getElementById('password').value;
-          if(password){
-            alert(`Phòng được tạo thành công!\nID Phòng: ${roomID}\nPassword: ${password}`);
-          }
-          else {
-            alert('Nhập password !!!')
-          }
-          
-        }
-      </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
         <script src="{{ url_for('static', filename = 'js/app.js') }}"></script>
-        <script src="{{ url_for('static', filename = 'js/game.js') }}"></script>
     </body>
 </html>

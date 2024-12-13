@@ -5,12 +5,27 @@
         <title>Caro Game</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/static/css/styles-caro.css">
+        <link rel="stylesheet" href="/static/css/styles-caro-on.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
     </head>
     <body>
         <h1 style="text-align:center;">Caro Game</h1>
-        <div id="status"></div>
+        <p id="player" class="hidden" >{{player}}</p>
+        <div id="game-container">
+            <div id="room-info">
+                <p id="roomInfo">ID phòng: {{ room_id }}</p>
+                <p id="player-count">Số người chơi: 0</p>
+                <p id="player-info">Đang chờ đủ 2 người chơi</p>
+                <p id="player-1">Player: {{player}}</p>
+                <p id="countdownme">30s</p>
+                <p id="player-2">Enemy :</p>
+                <p id="countdownenemy">30s</p>
+                <button type='submit'>Rời phòng</button>
+            </div>
+
+        
         <div id="board"></div>
+        <div id="status"></div>
     </body>
     <script>
         alert("Chế độ Người đấu Người ")

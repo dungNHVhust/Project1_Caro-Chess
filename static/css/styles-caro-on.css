@@ -5,8 +5,47 @@ body {
     color: white;
 }
 
+#game-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 20px;
+    color: white;
+}
 
-#board {
+/* Bảng thông tin phòng */
+#room-info {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    width: 250px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+#room-info p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+#room-info button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #FF073A;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#room-info button:hover {
+    background-color: #C50029;
+}
+
+/* #board {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,6 +53,15 @@ body {
     display: grid;
     grid-template-columns: repeat(20, 0fr);
     gap: 0px;
+} */
+#board {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+    padding: 10px;
+    border-radius: 10px;
 }
 .hidden {
     display: none ;
