@@ -185,8 +185,6 @@ def handle_join_room(data):
     }, room=room_id)
     
 
-
-
 @socketio.on('leave_room')
 def handle_leave_room(data):
     room_id = data['room_id']
@@ -216,7 +214,47 @@ def handle_leave_room(data):
     response = make_response(jsonify({'success': True, 'message': 'Đã rời phòng!'}))
     response.delete_cookie('Token')
     return response
-        
+
+# Cập nhật các bước đánh của người chơi
+@socketio.on('playerMove')
+def on_move(data):
+    room_id = data['room_id']
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # Lấy thông tin phòng từ cơ sở dữ liệu
+    cursor.execute('SELECT * FROM Rooms WHERE room_id = ?', (room_id,))
+    room = cursor.fetchone()
+
+    if not room:
+        emit('invalidMove', {'message': 'Room does not exist'}, room=request.sid)
+        return
+
+    # Lấy danh sách người chơi trong phòng
+    players = json.loads(room['players'])  # Parse JSON từ trường players
+
+    # Tìm người chơi hiện tại dựa trên request.sid
+    player = next((p for p in players if p['id'] == request.sid), None)
+    if not player:
+        emit('invalidMove', {'message': 'You are not in this room'}, room=request.sid)
+        return
+
+    # Gửi bước đánh của người chơi hiện tại đến tất cả người chơi trong phòng
+    emit('playerMove', data, room=room_id, include_self=True)
+
+    # Xác định đối thủ của người chơi hiện tại
+    opponent = next((p for p in players if p['id'] != request.sid), None)
+
+    if opponent and player['symbol'] != opponent['symbol']:
+        # Gửi bước đánh của đối thủ đến toàn bộ phòng, tránh gửi lại cho chính người chơi hiện tại
+        emit('opponentMove', data, room=room_id, skip_sid=request.sid)
+    else:
+        # Handle nếu không phải lượt của người chơi hoặc không xác định được đối thủ
+        emit('invalidMove', {'message': 'It is not your turn or opponent not found'}, room=request.sid)
+
+    # Đóng kết nối cơ sở dữ liệu
+    conn.close()     
         
 if __name__ == '__main__' :
     socketio.run(app,debug=True,port=1750)
