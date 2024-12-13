@@ -29,9 +29,23 @@ socket.on('room_joined', (data) => {
     player1.textContent = `Player: ${data.player == currentPlayer ? currentPlayer : data.enemy} - Symbol: ${data.player == currentPlayer ? 'O' : 'X'}`;
     player2.textContent = `Enemy: ${data.player == currentPlayer ? data.enemy : data.player} - Symbol: ${data.player == currentPlayer ? 'X' : 'O'}`;
   }
-  
-
 });
+
+//Leave Room 
+function leaveRoom(){
+  const room_ID = document.getElementById('roomInfo').textContent.split(':')[1].trim();
+  const playerName = document.getElementById('player-1').textContent.split(':')[1].trim();
+  socket.emit('leave_room', { 'room_id': room_ID, 'username': playerName });
+  window.location.href = `/`;
+}
+socket.on('user_left',(data) => {
+  if (data.error) {
+    console.error('Error:', data.error);
+    return;
+  }
+  alert("Đối thủ đã rời khỏi phòng!!!!")
+  window.location.href = `/`;
+})
 
   // Khai báo bảng và người chơi đầu được sử dụng "X"
 let boardElement1 = document.getElementById('board');

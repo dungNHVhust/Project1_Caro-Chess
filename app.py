@@ -26,7 +26,13 @@ def close_connection(exception):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    token = request.cookies.get('Token')
+    if not token:
+        return render_template('index.html')
+    else :
+        response = make_response(render_template('index.html'))
+        response.set_cookie('Token', '', expires=0)
+        return response
 
 @app.route('/caro-off')
 def off():
@@ -200,17 +206,15 @@ def handle_leave_room(data):
         return 'Player not in room', 400
 
     players.remove(player)
-    if not players:
-        cursor.execute('DELETE FROM Rooms WHERE room_id = ?', (room_id,))
-    else:
-        cursor.execute('UPDATE Rooms SET players = ? WHERE room_id = ?', (str(players), room_id))
+    
+    cursor.execute('DELETE FROM Rooms WHERE room_id = ?', (room_id,))
     conn.commit()
 
     leave_room(room_id)
     emit('user_left', {'room_id': room_id, 'player': player}, room=room_id)
     
     response = make_response(jsonify({'success': True, 'message': 'Đã rời phòng!'}))
-    response.delete_cookie('jwt_token')
+    response.delete_cookie('Token')
     return response
         
         
