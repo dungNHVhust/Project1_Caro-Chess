@@ -36,10 +36,6 @@ socket.on('room_joined', (data) => {
     }
     playerInfoElement.textContent = 'Bạn là: ' + check[0];
   }
-  // if(data.total_player == 2) {
-  //   resetGame();
-  // }
-  
 });
 
 //Leave Room 
@@ -54,7 +50,7 @@ socket.on('user_left',(data) => {
     console.error('Error:', data.error);
     return;
   }
-  alert("Đối thủ đã rời khỏi phòng.Bạn thắng !!!!")
+  showNotification("Đối thủ đã rời khỏi phòng.Bạn thắng !!!!","success")
   window.location.href = `/`;
 })
 
@@ -90,7 +86,7 @@ function handleClick(e) {
           e.target.classList.add('highlight');
           if (checkWin(board.indexOf(e.target), check[0])) {
               setTimeout(function() {
-                  alert(check[0] + ' wins!');
+                showNotification(`${check[0]} wins!`,"success");
                   resetGame();
               }, 100); // Thêm trễ 100ms
           } else {
@@ -100,10 +96,10 @@ function handleClick(e) {
           stopCountdownme(); // Dừng đếm khi người chơi hiện tại di chuyển
           startCountdownenemy();
       } else {
-          alert('Ô này đã được đánh rồi');
+          showNotification('Ô này đã được đánh rồi',"error");
       }
   } else {
-      alert('Chưa đến lượt của bạn!');
+      showNotification('Chưa đến lượt của bạn!',"error");
   }
 }
 
@@ -121,7 +117,7 @@ socket.on('opponentMove', function(data) {
       // Kiểm tra điều kiện thắng và xử lý
       if (checkWin(index, opponentSymbol)) {
           setTimeout(function() {
-              alert(opponentSymbol + ' wins!');
+            showNotification(`${opponentSymbol} wins!`,"success");
               resetGame();
           }, 100); // Thêm trễ 100ms
       }
@@ -199,7 +195,7 @@ function startCountdownme() {
         remainingTimeme--;
         if (remainingTimeme <= -2) {
             clearInterval(countdownme);
-            alert('Hết giờ! Bạn đã thua. Bấm để chơi ván khác!');
+            showNotification('Hết giờ! Bạn đã thua. Bấm để chơi ván khác!',"warning");
             resetGame();
         }
     }, 1000);
@@ -216,7 +212,7 @@ function startCountdownenemy() {
         remainingTimeenemy--;
         if (remainingTimeenemy <= -2) {
             clearInterval(countdownenemy);
-            alert('Đối thủ đã thua. Bấm để chơi ván khác!');
+            showNotification('Đối thủ đã thua. Bấm để chơi ván khác!',"success");
             resetGame();
         }
     }, 1000);

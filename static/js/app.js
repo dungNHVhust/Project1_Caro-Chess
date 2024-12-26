@@ -1,6 +1,6 @@
 let socket = io.connect('http://' + document.domain + ':' + location.port);
 function showRules() {
-    alert("Luật chơi Caro: ...");
+    showNotification("Luật chơi Caro: ...");
 }
 //PopUp
 const openPopUpBtn = document.getElementById("openPopup");
@@ -62,7 +62,7 @@ closeJoinRoomBtn.addEventListener('click',()=>{
     const password = document.getElementById('password').value.trim();
 
     if (!username || !password) {
-      alert("Vui lòng nhập đầy đủ thông tin!");
+      showNotification("Vui lòng nhập đầy đủ thông tin!","warning");
       return;
     }
 
@@ -81,18 +81,18 @@ closeJoinRoomBtn.addEventListener('click',()=>{
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          alert(`Phòng ${roomID} đã được tạo thành công!`);
+          showNotification(`Phòng ${roomID} đã được tạo thành công!`,"success");
           closePopup();
           window.location.href = `/caro-on`;
         } else {
-          alert(data.message || 'Đã xảy ra lỗi!');
+          showNotification(`${data.message}`,"error" || 'Đã xảy ra lỗi!',"error");
           closePopup();
           window.location.href = '/';
         }
       })
       .catch((error) => {
         console.error('Lỗi:', error);
-        alert('Không thể tạo phòng, vui lòng thử lại!');
+        showNotification('Không thể tạo phòng, vui lòng thử lại!',"error");
         closePopup();
         window.location.href = '/';
       });
@@ -105,7 +105,7 @@ closeJoinRoomBtn.addEventListener('click',()=>{
     const password = document.getElementById('joinRoom_password').value.trim();
 
     if (!roomID || !username || !password) {
-        alert("Vui lòng nhập đầy đủ thông tin!");
+        showNotification("Vui lòng nhập đầy đủ thông tin!","warning");
         return;
     }
 
@@ -127,12 +127,12 @@ closeJoinRoomBtn.addEventListener('click',()=>{
                 alert(`Tham gia phòng ${roomID} thành công!`);
                 window.location.href = `/caro-on`;
             } else {
-                alert(data.message || 'Đã xảy ra lỗi!');
+              showNotification(data.message || 'Đã xảy ra lỗi!');
             }
         })
         .catch((error) => {
             console.error('Lỗi:', error);
-            alert('Không thể tham gia phòng, vui lòng thử lại!');
+            showNotification('Không thể tham gia phòng, vui lòng thử lại!');
         });
 }
   

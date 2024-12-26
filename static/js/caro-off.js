@@ -27,7 +27,8 @@ function handleClick(e) {
     let index = board.indexOf(e.target);
     setTimeout(() => {
         if (checkWin(index, currentPlayer)) {
-            alert(currentPlayer + ' wins!');
+            showNotification(`${currentPlayer} wins!`,"success");
+            // alert(currentPlayer + ' wins!');
             resetGame();
         } else {
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
@@ -80,3 +81,4 @@ function resetGame() {
     // Đặt lại người chơi hiện tại
     currentPlayer = 'X';
 }
+

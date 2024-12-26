@@ -24,7 +24,7 @@ function handleClick(e){
     let index = board.indexOf(e.target);
     setTimeout(()=>{
         if(checkWin(index,currentPlayer)) {
-            alert('You Wins!');
+            showNotification('You Wins!',"success");
             resetGame();
         }
     },150);
@@ -37,7 +37,7 @@ function handleClick(e){
             board[computerMove[0] * 20 + computerMove[1]].classList.add('highlight'); // Highlight the cell
             if (checkWin(computerMove[0] * 20 + computerMove[1], currentPlayer)) {
                 setTimeout(function() {
-                    alert('Computer wins!');
+                    showNotification('Computer wins!',"success");
                     resetGame();
                 }, 150); 
             }

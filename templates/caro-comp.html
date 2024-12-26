@@ -13,7 +13,64 @@
 
     </body>
     <script>
-        alert('Chế độ Người đấu Máy ---> Người đi trước (X),máy đi sau (O)');
+        function showNotification(message, type = 'info') {
+            // Xóa thông báo cũ nếu có
+            const existingAlert = document.querySelector('.custom-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+        
+            // Tạo container cho thông báo
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+        
+            // Tạo phần message
+            const messageP = document.createElement('p');
+            messageP.className = 'alert-message';
+            messageP.textContent = message;
+        
+            // Tạo nút OK
+            const okButton = document.createElement('button');
+            okButton.className = 'alert-button';
+            okButton.textContent = 'OK';
+            
+            // Thêm style dựa vào type
+            switch(type) {
+                case 'error':
+                    alertDiv.style.borderColor = '#ff4444';
+                    okButton.style.background = '#ff4444';
+                    break;
+                case 'success':
+                    alertDiv.style.borderColor = '#00C851';
+                    okButton.style.background = '#00C851';
+                    break;
+                case 'warning':
+                    alertDiv.style.borderColor = '#ffbb33';
+                    okButton.style.background = '#ffbb33';
+                    break;
+                default:
+                    alertDiv.style.borderColor = '#4a90e2';
+                    okButton.style.background = '#4a90e2';
+            }
+        
+            // Thêm sự kiện click cho nút OK
+            okButton.onclick = () => {
+                alertDiv.remove();
+            };
+        
+            // Ghép các phần tử lại
+            alertDiv.appendChild(messageP);
+            alertDiv.appendChild(okButton);
+            document.body.appendChild(alertDiv);
+        
+            // Tự động đóng sau 5 giây (tùy chọn)
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+        showNotification('Chế độ Người đấu Máy ---> Người đi trước (X),máy đi sau (O)');
     </script>
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
