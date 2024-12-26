@@ -164,6 +164,7 @@ def handle_join_room(data):
 
     symbol = 'X' if len(players) == 0 else 'O'
     player = {'id': request.sid, 'symbol': symbol, 'username': username}
+    print(f"Join room : {request.sid}")
     players.append(player)
 
     cursor.execute('UPDATE Rooms SET players = ? WHERE room_id = ?', (json.dumps(players), room_id))
@@ -214,6 +215,45 @@ def handle_leave_room(data):
     response = make_response(jsonify({'success': True, 'message': 'Đã rời phòng!'}))
     response.delete_cookie('Token')
     return response
+
+# Xử lý sự kiện Disconnect
+@socketio.on('disconnect')
+def handle_disconnect():
+    user_id = request.sid  # Lấy ID của người chơi mất kết nối
+
+    # Tìm phòng mà người chơi đang tham gia
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT room_id, players FROM Rooms")
+    rooms = cursor.fetchall()
+    disconnected_player = None
+    room_id = None
+
+    # Duyệt qua tất cả các phòng để tìm người chơi mất kết nối
+    for room in rooms:
+        current_room_id = room[0]
+        players_json = room['players']
+        players_json = players_json.replace("'", '"')
+        players=json.loads(players_json)
+
+        for player in players:
+            if request.sid == player.get('id'):
+                disconnected_player = player
+                room_id = current_room_id
+                players.remove(player)
+                break
+            
+        if disconnected_player:
+            # Cập nhật danh sách players mới vào database
+            updated_players_json = json.dumps(players)
+            cursor.execute("UPDATE Rooms SET players = ? WHERE room_id = ?", (updated_players_json, room_id))
+            conn.commit()
+            print(f"User {user_id} was in room {room_id} and has been removed")
+            emit('user_left', {'room_id': room_id, 'player': player}, room=room_id)
+            
+    cursor.close()
+    conn.close()
+    
 
 # Cập nhật các bước đánh của người chơi
 @socketio.on('playerMove')

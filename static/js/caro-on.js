@@ -54,7 +54,7 @@ socket.on('user_left',(data) => {
     console.error('Error:', data.error);
     return;
   }
-  alert("Đối thủ đã rời khỏi phòng!!!!")
+  alert("Đối thủ đã rời khỏi phòng.Bạn thắng !!!!")
   window.location.href = `/`;
 })
 
