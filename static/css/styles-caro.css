@@ -120,6 +120,113 @@ body {
     }
 }
 
+/* Set diffycultly */
+#popup_SetDifficulty {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    z-index: 1000; /* Đưa lên trên cùng */
+    justify-content: center;
+    align-items: center;
+}
+#popup_SetDifficulty-title {
+    color: black; 
+    font-size: 24px; 
+    font-weight: bold; 
+    text-align: center; 
+    margin-bottom: 20px;
+}
+/* Nội dung chính của popup */
+.popup_SetDifficulty-content {
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Nút đóng popup */
+.close {
+    position: absolute;
+    top: 240px;
+    right: 335px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000000;
+}
+
+/* Nút chọn độ khó */
+.btn-difficulty {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    width: 300px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); 
+}
+
+#easy {
+    background-color: #4CAF50; 
+}
+
+#medium {
+    background-color: #FF9800; 
+}
+
+#hard {
+    background-color: #F44336; 
+}
+
+#hell {
+    background-color: #9C27B0; 
+}
+
+
+#easy:hover {
+    background-color: #45a049; 
+    color: rgb(255, 255, 255);
+    border: 2px solid #4CAF52;
+    transform: scale(1.1);
+}
+
+#medium:hover {
+    background-color: #FB8C00; 
+    color: rgb(255, 255, 255);
+    border: 2px solid #fa8d07;
+    transform: scale(1.1);
+}
+
+#hard:hover {
+    background-color: #D32F2F; 
+    color: rgb(255, 255, 255);
+    border: 2px solid #D32F2F;
+    transform: scale(1.1);
+}
+
+#hell:hover {
+    background-color: #8E24AA; 
+    color: rgb(255, 255, 255);
+    border: 2px solid #8E24AA;
+    transform: scale(1.1);
+    
+}
+
+.btn-difficulty {
+    background-color: #f0f0f0;
+    color: #020202;
+    transition: background-color 0.3s;
+}
 
 
 

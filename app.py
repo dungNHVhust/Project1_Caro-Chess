@@ -154,7 +154,7 @@ def handle_join_room(data):
     cursor.execute('SELECT * FROM Rooms WHERE room_id = ?', (room_id,))
     room = cursor.fetchone()
     if not room:
-        emit('error', {'message': 'Phòng không tồn tại!'})
+        emit('error', {'message': "Phòng không tồn tại!"})
         return
 
     players = json.loads(room['players'])  # Use json.loads instead of eval for safety

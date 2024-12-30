@@ -4,6 +4,46 @@ let boardElement = document.getElementById('board');
 let statusElement = document.getElementById('status');
 let board = [];
 let currentPlayer='X';
+let deph_easy = 1;
+let deph_medium = 2;
+let deph_hard = 3;
+let deph_hell = 4;
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const popup = document.getElementById("popup_SetDifficulty");
+    const closePopup = document.getElementById("closePopup_SetDifficulty");
+    const difficultyElement = document.getElementById("difficulty");
+    const difficultyButtons = document.querySelectorAll(".btn-difficulty");
+
+    // Mở popup (bạn có thể thêm sự kiện để hiển thị popup)
+    function openPopup() {
+        popup.style.display = "flex"; // Hiển thị popup
+    }
+
+    // Đóng popup
+    function closePopupHandler() {
+        popup.style.display = "none"; // Ẩn popup
+    }
+
+    // Xử lý khi chọn độ khó
+    function selectDifficulty(event) {
+        const difficulty = event.target.id; 
+        difficultyElement.innerText = difficulty; 
+        closePopupHandler(); // Đóng popup
+    }
+
+    // Gắn sự kiện cho nút đóng popup
+    closePopup.addEventListener("click", closePopupHandler);
+
+    // Gắn sự kiện cho các nút chọn độ khó
+    difficultyButtons.forEach((button) => {
+        button.addEventListener("click", selectDifficulty);
+    });
+
+    // Mở popup khi load (hoặc thêm sự kiện để mở popup)
+    openPopup();
+});
 
 //Tạo bảng 20x20
 for(let i=0;i<20;i++){
@@ -25,9 +65,10 @@ function handleClick(e){
     setTimeout(()=>{
         if(checkWin(index,currentPlayer)) {
             showNotification('You Wins!',"success");
+            // alert('You Wins!');
             resetGame();
         }
-    },150);
+    },200);
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     const computerMove = getComputerMove();
         // Kiểm tra xem ô đã được đánh chưa
@@ -39,10 +80,14 @@ function handleClick(e){
                 setTimeout(function() {
                     showNotification('Computer wins!',"success");
                     resetGame();
-                }, 150); 
+                }, 200); 
             }
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
         }
+}
+// Hàm kiểm tra vị trí hợp lệ
+function isValidPosition(x, y) {
+    return x >= 0 && x < 20 && y >= 0 && y < 20 ;
 }
 
 // Hàm kiểm tra trả về kết quả (Thắng - Hòa)
@@ -60,7 +105,7 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row + dx * i;
             let y = col + dy * i;
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (!isValidPosition(x, y) || board[x * 20 + y].textContent !== player) {
                 break;
             }
             count++;
@@ -68,13 +113,26 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row - dx * i;
             let y = col - dy * i;
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (!isValidPosition(x, y) || board[x * 20 + y].textContent !== player) {
                 break;
             }
             count++;
         }
         if (count >= 5) {
             return true;
+        }
+    }
+    return false;
+}
+
+// Hàm kiểm tra điều kiện thắng tổng quát (tính toán dựa trên trạng thái bảng)
+function checkWinCondition(player) {
+    for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            let index = i * 20 + j;
+            if (board[index].textContent === player && checkWin(index, player)) {
+                return true;
+            }
         }
     }
     return false;
@@ -89,7 +147,155 @@ function resetGame() {
     }
     // Đặt lại người chơi hiện tại
     currentPlayer = 'X';
+    console.log('Game reset');
 }
+
+//Thuật toán minimax với cắt tia alpha-beta
+function minimax(depth, isMaximizing, alpha, beta) {
+    if (depth === 0) {
+        return evaluateBoard('O') - evaluateBoard('X');  // Điểm dựa trên sự đánh giá mức độ nguy hiểm
+    }
+
+    // Kiểm tra thắng thua
+    if (checkWinCondition('O')) {
+        return 10;
+    }
+    if (checkWinCondition('X')) {
+        return -10;
+    }
+
+    if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < 20; i++) {
+            for (let j = 0; j < 20; j++) {
+                if (board[i * 20 + j].textContent === "") {
+                    board[i * 20 + j].textContent = 'O';
+                    let score = minimax(depth - 1, false, alpha, beta);
+                    board[i * 20 + j].textContent = "";
+                    bestScore = Math.max(score, bestScore);
+                    alpha = Math.max(alpha, score);
+                    if (beta <= alpha) {
+                        break; // Cắt tia
+                    }
+                }
+            }
+        }
+        return bestScore;
+    } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < 20; i++) {
+            for (let j = 0; j < 20; j++) {
+                if (board[i * 20 + j].textContent === "") {
+                    board[i * 20 + j].textContent = 'X';
+                    let score = minimax(depth - 1, true, alpha, beta);
+                    board[i * 20 + j].textContent = "";
+                    bestScore = Math.min(score, bestScore);
+                    beta = Math.min(beta, score);
+                    if (beta <= alpha) {
+                        break; // Cắt tia
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
+}
+
+
+//Đánh  giá mức độ nguy hiểm 
+function evaluateBoard(player) {
+    let score = 0;
+    let opponent = (player === 'X') ? 'O' : 'X';
+    
+    // Đánh giá hàng, cột và chéo theo từng hướng.
+    let directions = [
+        [-1, -1], [-1, 0], [-1, 1], [0, 1]
+    ];
+    
+    for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            if (board[i * 20 + j].textContent === player) {
+                for (let [dx, dy] of directions) {
+                    let countPlayer = 1;
+                    let countOpponent = 0;
+                    let x = i, y = j;
+                    
+                    // Tính điểm cho người chơi.
+                    for (let k = 1; k < 5; k++) {
+                        x += dx;
+                        y += dy;
+                        if (isValidPosition(x, y)) {
+                            if (board[x * 20 + y].textContent === player) {
+                                countPlayer++;
+                            } else if (board[x * 20 + y].textContent === opponent) {
+                                countOpponent++;
+                                break;
+                            }
+                        }
+                    }
+                    // Nếu có chuỗi dài 4 của người chơi thì điểm cao.
+                    if (countPlayer === 4) {
+                        score += 1000; 
+                    } 
+                    // Nếu đối thủ có chuỗi dài 4 thì cần phải ngừng lại.
+                    if (countOpponent === 3) {
+                        score -= 1000; 
+                    }
+                }
+            }
+        }
+    }
+    return score;
+}
+
+//Tìm nước đi tốt nhất dựa trên minimax
+function getComputerMove() {
+    const difficulty = document.getElementById("difficulty").innerText; 
+    if(difficulty === 'hell'){
+        const bestPoints = getBestPoints();
+        const randomIndex = Math.floor(Math.random() * bestPoints.length);
+        return bestPoints[randomIndex];
+    } else {
+        let bestScore = -Infinity;
+    let move = null;
+    let depth = difficulty === 'easy' ? deph_easy : difficulty === 'medium' ? deph_medium : deph_hard ;
+
+    for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            if (board[i * 20 + j].textContent === "") {
+                // Kiểm tra các ô lân cận
+                let isNearby = false;
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        let x = i + dx;
+                        let y = j + dy;
+                        if (isValidPosition(x, y) && board[x * 20 + y].textContent !== "") {
+                            isNearby = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isNearby) continue;
+
+                // Áp dụng Minimax để tính điểm
+                board[i * 20 + j].textContent = 'O';
+                let score = minimax(depth - 1, false, -Infinity, Infinity);
+                board[i * 20 + j].textContent = "";
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = [i, j];
+                }
+            }
+        }
+    }
+    return move;
+    }
+}
+
+
+//HELL MODE
 
 // Hằng số đánh giá điểm
 const MAP_SCORE_COMPUTER = new Map([
@@ -230,11 +436,4 @@ function getBestPoints() {
 
     // Ưu tiên tấn công nếu có điểm tấn công cao hơn, ngược lại ưu tiên phòng thủ
     return maxAttackScore >= maxDefenseScore ? bestAttackPoints : bestDefensePoints;
-}
-
-// Hàm di chuyển của máy
-function getComputerMove() {
-    const bestPoints = getBestPoints();
-    const randomIndex = Math.floor(Math.random() * bestPoints.length);
-    return bestPoints[randomIndex];
 }
