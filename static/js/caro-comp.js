@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
     openPopup();
 });
 
-//Tạo bảng 20x20
-for(let i=0;i<20;i++){
-    for(let j=0;j<20;j++){
+//Tạo bảng 15x15
+for(let i=0;i<15;i++){
+    for(let j=0;j<15;j++){
         let cell = document.createElement('div');
         cell.classList.add('cell');
         cell.addEventListener('click',handleClick, {once:true});
@@ -65,35 +65,36 @@ function handleClick(e){
     setTimeout(()=>{
         if(checkWin(index,currentPlayer)) {
             showNotification('You Wins!',"success");
-            // alert('You Wins!');
+            alert('You Wins!');
             resetGame();
         }
-    },200);
+    },150);
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     const computerMove = getComputerMove();
         // Kiểm tra xem ô đã được đánh chưa
-        if (board[computerMove[0] * 20 + computerMove[1]].textContent === '') {
-            board[computerMove[0] * 20 + computerMove[1]].textContent = currentPlayer;
-            board[computerMove[0] * 20 + computerMove[1]].classList.add(currentPlayer.toLowerCase());
-            board[computerMove[0] * 20 + computerMove[1]].classList.add('highlight'); // Highlight the cell
-            if (checkWin(computerMove[0] * 20 + computerMove[1], currentPlayer)) {
+        if (board[computerMove[0] * 15 + computerMove[1]].textContent === '') {
+            board[computerMove[0] * 15 + computerMove[1]].textContent = currentPlayer;
+            board[computerMove[0] * 15 + computerMove[1]].classList.add(currentPlayer.toLowerCase());
+            board[computerMove[0] * 15 + computerMove[1]].classList.add('highlight'); // Highlight the cell
+            if (checkWin(computerMove[0] * 15 + computerMove[1], currentPlayer)) {
                 setTimeout(function() {
-                    showNotification('Computer wins!',"success");
+                    // showNotification('Computer wins!',"success");
+                    alert('Computer Win!!!');
                     resetGame();
-                }, 200); 
+                }, 150); 
             }
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
         }
 }
 // Hàm kiểm tra vị trí hợp lệ
 function isValidPosition(x, y) {
-    return x >= 0 && x < 20 && y >= 0 && y < 20 ;
+    return x >= 0 && x < 15 && y >= 0 && y < 15 ;
 }
 
 // Hàm kiểm tra trả về kết quả (Thắng - Hòa)
 function checkWin(index, player) {
-    let row = Math.floor(index / 20);
-    let col = index % 20;
+    let row = Math.floor(index / 15);
+    let col = index % 15;
     let directions = [
         [-1, -1],
         [-1, 0],
@@ -105,7 +106,7 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row + dx * i;
             let y = col + dy * i;
-            if (!isValidPosition(x, y) || board[x * 20 + y].textContent !== player) {
+            if (!isValidPosition(x, y) || board[x * 15 + y].textContent !== player) {
                 break;
             }
             count++;
@@ -113,7 +114,7 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row - dx * i;
             let y = col - dy * i;
-            if (!isValidPosition(x, y) || board[x * 20 + y].textContent !== player) {
+            if (!isValidPosition(x, y) || board[x * 15 + y].textContent !== player) {
                 break;
             }
             count++;
@@ -127,9 +128,9 @@ function checkWin(index, player) {
 
 // Hàm kiểm tra điều kiện thắng tổng quát (tính toán dựa trên trạng thái bảng)
 function checkWinCondition(player) {
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            let index = i * 20 + j;
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            let index = i * 15 + j;
             if (board[index].textContent === player && checkWin(index, player)) {
                 return true;
             }
@@ -166,12 +167,12 @@ function minimax(depth, isMaximizing, alpha, beta) {
 
     if (isMaximizing) {
         let bestScore = -Infinity;
-        for (let i = 0; i < 20; i++) {
-            for (let j = 0; j < 20; j++) {
-                if (board[i * 20 + j].textContent === "") {
-                    board[i * 20 + j].textContent = 'O';
+        for (let i = 0; i < 15; i++) {
+            for (let j = 0; j < 15; j++) {
+                if (board[i * 15 + j].textContent === "") {
+                    board[i * 15 + j].textContent = 'O';
                     let score = minimax(depth - 1, false, alpha, beta);
-                    board[i * 20 + j].textContent = "";
+                    board[i * 15 + j].textContent = "";
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(alpha, score);
                     if (beta <= alpha) {
@@ -183,12 +184,12 @@ function minimax(depth, isMaximizing, alpha, beta) {
         return bestScore;
     } else {
         let bestScore = Infinity;
-        for (let i = 0; i < 20; i++) {
-            for (let j = 0; j < 20; j++) {
-                if (board[i * 20 + j].textContent === "") {
-                    board[i * 20 + j].textContent = 'X';
+        for (let i = 0; i < 15; i++) {
+            for (let j = 0; j < 15; j++) {
+                if (board[i * 15 + j].textContent === "") {
+                    board[i * 15 + j].textContent = 'X';
                     let score = minimax(depth - 1, true, alpha, beta);
-                    board[i * 20 + j].textContent = "";
+                    board[i * 15 + j].textContent = "";
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(beta, score);
                     if (beta <= alpha) {
@@ -212,9 +213,9 @@ function evaluateBoard(player) {
         [-1, -1], [-1, 0], [-1, 1], [0, 1]
     ];
     
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            if (board[i * 20 + j].textContent === player) {
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            if (board[i * 15 + j].textContent === player) {
                 for (let [dx, dy] of directions) {
                     let countPlayer = 1;
                     let countOpponent = 0;
@@ -225,9 +226,9 @@ function evaluateBoard(player) {
                         x += dx;
                         y += dy;
                         if (isValidPosition(x, y)) {
-                            if (board[x * 20 + y].textContent === player) {
+                            if (board[x * 15 + y].textContent === player) {
                                 countPlayer++;
-                            } else if (board[x * 20 + y].textContent === opponent) {
+                            } else if (board[x * 15 + y].textContent === opponent) {
                                 countOpponent++;
                                 break;
                             }
@@ -260,16 +261,16 @@ function getComputerMove() {
     let move = null;
     let depth = difficulty === 'easy' ? deph_easy : difficulty === 'medium' ? deph_medium : deph_hard ;
 
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            if (board[i * 20 + j].textContent === "") {
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            if (board[i * 15 + j].textContent === "") {
                 // Kiểm tra các ô lân cận
                 let isNearby = false;
                 for (let dx = -1; dx <= 1; dx++) {
                     for (let dy = -1; dy <= 1; dy++) {
                         let x = i + dx;
                         let y = j + dy;
-                        if (isValidPosition(x, y) && board[x * 20 + y].textContent !== "") {
+                        if (isValidPosition(x, y) && board[x * 15 + y].textContent !== "") {
                             isNearby = true;
                             break;
                         }
@@ -279,9 +280,9 @@ function getComputerMove() {
                 if (!isNearby) continue;
 
                 // Áp dụng Minimax để tính điểm
-                board[i * 20 + j].textContent = 'O';
+                board[i * 15 + j].textContent = 'O';
                 let score = minimax(depth - 1, false, -Infinity, Infinity);
-                board[i * 20 + j].textContent = "";
+                board[i * 15 + j].textContent = "";
 
                 if (score > bestScore) {
                     bestScore = score;
@@ -332,7 +333,7 @@ function evaluatePosition(row, col, player) {
             let x = row + dx * i;
             let y = col + dy * i;
 
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
 
@@ -343,7 +344,7 @@ function evaluatePosition(row, col, player) {
             let x = row - dx * i;
             let y = col - dy * i;
 
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
 
@@ -375,7 +376,7 @@ function evaluateDefensePosition(row, col, player) {
             let x = row + dx * i;
             let y = col + dy * i;
 
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
 
@@ -386,7 +387,7 @@ function evaluateDefensePosition(row, col, player) {
             let x = row - dx * i;
             let y = col - dy * i;
 
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
 
@@ -407,9 +408,9 @@ function getBestPoints() {
     let bestAttackPoints = [];
     let bestDefensePoints = [];
 
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            if (board[i * 20 + j].textContent === "") {
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            if (board[i * 15 + j].textContent === "") {
                 const attackScore = evaluatePosition(i, j, 'O');
                 const defenseScore = evaluateDefensePosition(i, j, 'X');
 

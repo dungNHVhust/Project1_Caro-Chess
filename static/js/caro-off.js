@@ -7,9 +7,9 @@ let statusElement = document.getElementById('status');
 let board = [];
 let currentPlayer = 'X';
 
-// Tạo bảng 20x20 
-for (let i = 0; i < 20; i++) {
-    for (let j = 0; j < 20; j++) {
+// Tạo bảng 15x15 
+for (let i = 0; i < 15; i++) {
+    for (let j = 0; j < 15; j++) {
         let cell = document.createElement('div');
         cell.classList.add('cell');
         cell.addEventListener('click', handleClick, { once: true });
@@ -38,8 +38,8 @@ function handleClick(e) {
 
 // Hàm kiểm tra trả về kết quả (Thắng - Hòa)
 function checkWin(index, player) {
-    let row = Math.floor(index / 20);
-    let col = index % 20;
+    let row = Math.floor(index / 15);
+    let col = index % 15;
     let directions = [
         [-1, -1],
         [-1, 0],
@@ -51,7 +51,7 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row + dx * i;
             let y = col + dy * i;
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
             count++;
@@ -59,7 +59,7 @@ function checkWin(index, player) {
         for (let i = 1; i < 5; i++) {
             let x = row - dx * i;
             let y = col - dy * i;
-            if (x < 0 || x >= 20 || y < 0 || y >= 20 || board[x * 20 + y].textContent !== player) {
+            if (x < 0 || x >= 15 || y < 0 || y >= 15 || board[x * 15 + y].textContent !== player) {
                 break;
             }
             count++;
